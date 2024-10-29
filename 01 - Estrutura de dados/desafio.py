@@ -14,6 +14,26 @@ def menu():
     => """
     return input(textwrap.dedent(menu))
 
+def validar_cpf(cpf):
+    
+    cpf = ''.join(filter(str.isdigit, cpf))  # Remove caracteres não numéricos
+    if len(cpf) != 11 or cpf == cpf[0] * 11:
+        cpf_valido = False
+    else:
+      for i in range(9, 11):
+          soma = sum(int(cpf[j]) * ((i + 1) - j) for j in range(i))
+          digito = (soma * 10 % 11) % 10
+          if digito != int(cpf[i]):
+              cpf_valido = False
+          else:
+              cpf_valido = True
+    if not cpf_valido:
+      print ("CPF inválido!")
+
+    
+    
+    return cpf_valido
+     
 
 def depositar(saldo, valor, extrato, /):
     if valor > 0:
@@ -61,19 +81,20 @@ def exibir_extrato(saldo, /, *, extrato):
 
 def criar_usuario(usuarios):
     cpf = input("Informe o CPF (somente número): ")
-    usuario = filtrar_usuario(cpf, usuarios)
+    if validar_cpf(cpf):
+      usuario = filtrar_usuario(cpf, usuarios)
 
-    if usuario:
-        print("\n@@@ Já existe usuário com esse CPF! @@@")
-        return
+      if usuario:
+          print("\n@@@ Já existe usuário com esse CPF! @@@")
+          return
 
-    nome = input("Informe o nome completo: ")
-    data_nascimento = input("Informe a data de nascimento (dd-mm-aaaa): ")
-    endereco = input("Informe o endereço (logradouro, nro - bairro - cidade/sigla estado): ")
+      nome = input("Informe o nome completo: ")
+      data_nascimento = input("Informe a data de nascimento (dd-mm-aaaa): ")
+      endereco = input("Informe o endereço (logradouro, nro - bairro - cidade/sigla estado): ")
 
-    usuarios.append({"nome": nome, "data_nascimento": data_nascimento, "cpf": cpf, "endereco": endereco})
+      usuarios.append({"nome": nome, "data_nascimento": data_nascimento, "cpf": cpf, "endereco": endereco})
 
-    print("=== Usuário criado com sucesso! ===")
+      print("=== Usuário criado com sucesso! ===")
 
 
 def filtrar_usuario(cpf, usuarios):
